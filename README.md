@@ -20,6 +20,8 @@ Actions:
     export: exports the database to a csv file. It needs a name for the csv file as second input:
         name of the csv file: str
 
-Example: python main.py add in tv 599
-Example: python main.py see month feb
-Example: python main.py export nuovoFile
+Examples:
+
+- python main.py add in tv 599
+- python main.py see month feb
+- python main.py export nuovoFile
