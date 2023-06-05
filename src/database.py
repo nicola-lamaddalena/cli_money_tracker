@@ -6,8 +6,12 @@ from datetime import datetime
 
 
 db_name = "expenseTracker.db"
+db_dir = "../dbFiles"
 
-conn = sqlite3.connect(db_name)
+if not os.path.exists(db_dir):
+    os.mkdir(db_dir)
+
+conn = sqlite3.connect(os.path.join(db_dir, db_name))
 cursor = conn.cursor()
 
 
