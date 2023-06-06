@@ -32,6 +32,10 @@ def create_table():
 
 
 def add_record(name: str, value: int | float, type: str):
+    if name == "":
+        name = "default"
+    if type == "":
+        type = "out"
     cursor.execute(
         """
         insert or ignore into expenses(name, value, type, day, month, year)
@@ -39,7 +43,7 @@ def add_record(name: str, value: int | float, type: str):
         """,
         (
             name,
-            value,
+            float(value),
             type,
             datetime.now().day,
             datetime.now().month,

@@ -3,21 +3,24 @@ from database import create_table, add_record, display_records, export_database
 
 
 def add():
-    record_name = input("Insert a name for the record: ")
-    record_value = float(input("Insert a value for the record (int or float): "))
-    record_type = input("Insert a type for the record (in/out): ")
-    return record_name, record_value, record_type
+    record_name = input("Insert a name for the record: ").capitalize().strip()
+    record_type = input("Insert a type for the record (in/out): ").strip().lower()
+    try:
+        record_value = float(
+            input("Insert a numeric value for the record (int or float): ")
+        )
+        return record_name, record_value, record_type
+    except ValueError:
+        print("Insert numeric value (int or float).")
 
 
 def see():
     time_step = input("Insert a time step (month/year): ")
-    time_filter = input("Insert a time filter (int): ")
-    return time_step, time_filter
-
-
-def export():
-    file_name = input("Insert a name for the CSV file: ")
-    return file_name
+    try:
+        time_filter = int(input("Insert a time filter (int): "))
+    except ValueError:
+        print("Insert a numeric value for the time filter (int | float): ")
+        return time_step, time_filter
 
 
 def main():
@@ -33,8 +36,13 @@ def main():
             for record in records:
                 print(record)
         case "export":
-            file_name = export()
-            export_database(file_name)
+            try:
+                file_name = argv[2]
+                export_database(file_name)
+            except IndexError:
+                print(
+                    "Error: No name for the CSV file.\nThe second argument cannot be empty."
+                )
 
 
 if __name__ == "__main__":
