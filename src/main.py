@@ -1,5 +1,6 @@
 from sys import argv
 from database import create_table, add_record, display_records, export_database
+import pandas as pd
 
 
 def add():
@@ -16,11 +17,14 @@ def add():
 
 def see():
     time_step = input("Insert a time step (month/year): ")
+    if time_step not in ["month", "year"]:
+        time_step = "year"
+        print("Using year as time step.\n")
     try:
-        time_filter = int(input("Insert a time filter (int): "))
-    except ValueError:
-        print("Insert a numeric value for the time filter (int | float): ")
+        time_filter = int(input("Insert a time filter (int | float): "))
         return time_step, time_filter
+    except ValueError:
+        print("Insert a numeric value for the time filter (int | float)")
 
 
 def main():
@@ -31,10 +35,24 @@ def main():
             record_name, record_value, record_type = add()
             add_record(record_name, record_value, record_type)
         case "see":
-            time_step, time_filter = see()
-            records = display_records((time_step, time_filter))
-            for record in records:
-                print(record)
+            try:
+                time_step, time_filter = see()
+                records = pd.DataFrame(
+                    display_records((time_step, time_filter)),
+                    columns=[
+                        "RecordId",
+                        "RecordName",
+                        "RecordValue",
+                        "RecordType",
+                        "RecordDay",
+                        "RecordMonth",
+                        "RecordYear",
+                    ],
+                )
+                records.set_index("RecordId", inplace=True)
+                print(records)
+            except TypeError:
+                print("Error: Check your inputs.")
         case "export":
             try:
                 file_name = argv[2]

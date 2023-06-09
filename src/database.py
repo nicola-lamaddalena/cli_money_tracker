@@ -1,15 +1,14 @@
-import csv
-import os
+from csv import writer
+from os import mkdir
 import os.path
 import sqlite3
 from datetime import datetime
-
 
 db_name = "expenseTracker.db"
 db_dir = "../dbFiles"
 
 if not os.path.exists(db_dir):
-    os.mkdir(db_dir)
+    mkdir(db_dir)
 
 conn = sqlite3.connect(os.path.join(db_dir, db_name))
 cursor = conn.cursor()
@@ -53,8 +52,8 @@ def add_record(name: str, value: int | float, type: str):
     conn.commit()
 
 
-def display_records(time_step: int = None, month_or_year: str = None):
-    match month_or_year:
+def display_records(time_step: str = None, time_filter: int = None):
+    match time_filter:
         case "month":
             cursor.execute(
                 """
@@ -63,10 +62,9 @@ def display_records(time_step: int = None, month_or_year: str = None):
                 where month = ?
                 limit 20
                 """,
-                (time_step,),
+                (time_filter,),
             )
             return cursor.fetchall()
-
         case "year":
             cursor.execute(
                 """
@@ -75,7 +73,7 @@ def display_records(time_step: int = None, month_or_year: str = None):
                 where year = ?
                 limit 20
                 """,
-                (time_step,),
+                (time_filter,),
             )
             return cursor.fetchall()
 
@@ -98,7 +96,7 @@ def export_database(file_name: str):
     records = display_records()
     file_name += ".csv"
     with open(os.path.join(dir, file_name), "w", newline="") as csv_file:
-        csv_writer = csv.writer(csv_file, delimiter=",")
+        csv_writer = writer(csv_file, delimiter=",")
         csv_writer.writerow(
             [
                 "RecordId",
