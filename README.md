@@ -2,7 +2,13 @@
 
 The CLI app can save new expenses, display the old ones or export the database table to a CSV file.
 
-Actions:
+## Usage
+Type in the terminal:
+
+    pip install -r requirements.txt
+to install the required libraries.
+
+## Available Actions:
 
     add: inserts a record into the database.
         type of the record: str - "in" for income and "out" for expense
