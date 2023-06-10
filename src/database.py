@@ -52,15 +52,15 @@ def add_record(name: str, value: int | float, type: str):
     conn.commit()
 
 
+# todo: the function displays all the records, insert a limit argument
 def display_records(time_step: str = None, time_filter: int = None):
-    match time_filter:
+    match time_step:
         case "month":
             cursor.execute(
                 """
                 select * 
                 from expenses
                 where month = ?
-                limit 20
                 """,
                 (time_filter,),
             )
@@ -71,7 +71,6 @@ def display_records(time_step: str = None, time_filter: int = None):
                 select * 
                 from expenses
                 where year = ?
-                limit 20
                 """,
                 (time_filter,),
             )
@@ -82,8 +81,7 @@ def display_records(time_step: str = None, time_filter: int = None):
                 """
                 select *
                 from expenses
-                limit 20
-                """
+                """,
             )
             return cursor.fetchall()
 

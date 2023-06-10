@@ -38,7 +38,7 @@ def main():
             try:
                 time_step, time_filter = see()
                 records = pd.DataFrame(
-                    display_records((time_step, time_filter)),
+                    display_records(time_step, time_filter),
                     columns=[
                         "RecordId",
                         "RecordName",
