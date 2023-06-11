@@ -1,6 +1,6 @@
 from sys import argv
-from database import create_table, add_record, display_records, export_database
 import pandas as pd
+import models.connector, models.record
 
 
 def add():
@@ -28,17 +28,22 @@ def see():
 
 
 def main():
-    create_table()
+    db_name = "newDb.db"
+    connector = models.connector.Connector(db_name=db_name)
+    connector.create_table()
     action = argv[1]
     match action:
         case "add":
             record_name, record_value, record_type = add()
-            add_record(record_name, record_value, record_type)
+            record = models.record.Record(
+                name=record_name, value=record_value, type=record_type
+            )
+            connector.add(record=record)
         case "see":
             try:
-                time_step, time_filter = see()
+                step, filter = see()
                 records = pd.DataFrame(
-                    display_records(time_step, time_filter),
+                    connector.display(step=step, filter=filter),
                     columns=[
                         "RecordId",
                         "RecordName",
@@ -56,7 +61,7 @@ def main():
         case "export":
             try:
                 file_name = argv[2]
-                export_database(file_name)
+                connector.export(file_name)
             except IndexError:
                 print(
                     "Error: No name for the CSV file.\nThe second argument cannot be empty."
