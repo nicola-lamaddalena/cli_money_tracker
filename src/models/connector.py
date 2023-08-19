@@ -4,10 +4,11 @@ from .record import Record
 from csv import writer
 from os import mkdir
 import os.path
+from typing import List
 
 
 class Connector:
-    def __init__(self, db_name: str):
+    def __init__(self, db_name: str) -> None:
         self.db_dir = r"../dbFiles"
         if not os.path.exists(self.db_dir):
             mkdir(self.db_dir)
@@ -19,7 +20,7 @@ class Connector:
     def __str__(self) -> str:
         return self.db_name
 
-    def create_table(self):
+    def create_table(self) -> None:
         self.cursor.execute(
             """
             create table if not exists expenses (
@@ -35,7 +36,7 @@ class Connector:
         )
         self.conn.commit()
 
-    def add(self, record: Record):
+    def add(self, record: Record) -> None:
         self.cursor.execute(
             """
             insert or ignore into expenses(
@@ -54,7 +55,7 @@ class Connector:
         )
         self.conn.commit()
 
-    def display(self, step: str = None, filter: str = None) -> list[str]:
+    def display(self, step: str = None, filter: str = None) -> List[str]:
         match step:
             case "month":
                 self.cursor.execute(
@@ -85,7 +86,7 @@ class Connector:
                 )
                 return self.cursor.fetchall()
 
-    def export(self, file_name: str = "default"):
+    def export(self, file_name: str = "default") -> None:
         csv_dir = r"../exportFiles"
         if not os.path.exists(csv_dir):
             mkdir(csv_dir)

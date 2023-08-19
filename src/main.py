@@ -3,38 +3,42 @@ import pandas as pd
 import models.connector, models.record
 
 
-def add():
-    record_name = input("Insert a name for the record: ").capitalize().strip()
+def add() -> tuple[str, str, float]:
+    record_name = input("Insert a name for the record: ").title().strip()
     record_type = input("Insert a type for the record (in/out): ").strip().lower()
     try:
         record_value = float(
-            input("Insert a numeric value for the record (int or float): ")
+            input("Insert a numeric value for the record (int | float): ")
         )
-        return record_name, record_value, record_type
+        return record_name, record_type, record_value
     except ValueError:
-        print("Insert numeric value (int or float).")
+        print("Insert numeric value (int | float).")
 
 
-def see():
-    time_step = input("Insert a time step (month/year): ")
+def see() -> tuple[str, int]:
+    time_step = input("Insert a time step ('month' | 'year'. Default is 'year'): ")
     if time_step not in ["month", "year"]:
         time_step = "year"
         print("Using year as time step.\n")
     try:
-        time_filter = int(input("Insert a time filter (int | float): "))
+        time_filter = int(
+            input(
+                "Insert a time filter (int. Example: 2023 for the year or 12 for the month.): "
+            )
+        )
         return time_step, time_filter
     except ValueError:
         print("Insert a numeric value for the time filter (int | float)")
 
 
-def main():
+def main() -> None:
     db_name = "newDb.db"
     connector = models.connector.Connector(db_name=db_name)
     connector.create_table()
     action = argv[1]
     match action:
         case "add":
-            record_name, record_value, record_type = add()
+            record_name, record_type, record_value = add()
             record = models.record.Record(
                 name=record_name, value=record_value, type=record_type
             )
