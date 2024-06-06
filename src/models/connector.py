@@ -4,7 +4,6 @@ from .record import Record
 from csv import writer
 from os import mkdir
 import os.path
-from typing import List
 
 
 class Connector:
@@ -27,7 +26,6 @@ class Connector:
                 id integer primary key autoincrement,
                 name varchar(200) not null,
                 value decimal not null,
-                type varchar(5) not null,
                 day integer not null,
                 month integer not null,
                 year integer not null
@@ -40,14 +38,13 @@ class Connector:
         self.cursor.execute(
             """
             insert or ignore into expenses(
-                name, value, type, day, month, year
+                name, value, day, month, year
             )
-            values (?,?,?,?,?,?);
+            values (?,?,?,?,?);
             """,
             (
                 record.name,
                 record.value,
-                record.type,
                 datetime.now().day,
                 datetime.now().month,
                 datetime.now().year,
@@ -55,7 +52,7 @@ class Connector:
         )
         self.conn.commit()
 
-    def display(self, step: str = None, filter: str = None) -> List[str]:
+    def display(self, step: str = None, filter: str = None) -> list[str]:
         match step:
             case "month":
                 self.cursor.execute(
@@ -100,7 +97,6 @@ class Connector:
                     "Record Id",
                     "Record Name",
                     "Record Value",
-                    "Record Type",
                     "Record Day",
                     "Record Month",
                     "Record Year",
